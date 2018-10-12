@@ -1,4 +1,5 @@
 import random
+import algorithms
 
 
 class Agent:
@@ -7,16 +8,18 @@ class Agent:
         self.pos_y = 0
         self.old_pos_x = self.pos_x
         self.old_pos_y = self.pos_y
-        self.policy = None  # DDPG class
+        # for actor critic
+        self.policy = algorithms.DDPG(0.99,0.01,10,4,4)
+
         self.action = None
         self.width = width - 1  # grid positions are from 0 - 9
         self.height = height - 1
         self.verbose = True
 
-    def compute_action(self):
+    def compute_action(self, obs):
         # TODO: REPLACE THIS WITH A LEARNING ALGORITHM
-        action = random.randint(0, 3)
-        self.action = action
+        action = self.policy.select_action(obs)
+        return action
 
     def update_pos(self):
         if self.action == 0:  # up
@@ -92,7 +95,7 @@ class Target:
             print("invalid action")
 
     def reset(self):
-        self.pos_x = 0
+        self.pos_x = 9
         self.pos_y = 0
         self.old_pos_x = 0
         self.old_pos_y = 0

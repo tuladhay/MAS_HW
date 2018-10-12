@@ -2,6 +2,8 @@ import numpy as np
 import random
 from operator import attrgetter
 from entities import Agent, Target
+import torch
+import operator
 
 
 class Gridworld():
@@ -18,6 +20,8 @@ class Gridworld():
         self.set_agent_pos()
         self.set_target_pos()
 
+        self.obs = []
+
     def set_agent_pos(self):
         for a in self.agents:
             pos_x = a.pos_x
@@ -33,13 +37,13 @@ class Gridworld():
             pos_y = self.target.pos_y
         self.grid[pos_x][pos_y] = 8
 
-    def step(self):
+    def step(self, obs):
         agent_rewards = []
         reward = 0
         reward -= 0.5  # negative reward for each step
         # generate next action
         for a in self.agents:
-            a.compute_action()
+            a.compute_action(obs)
             a.update_pos()
 
         self.target.move_random()
@@ -57,14 +61,40 @@ class Gridworld():
 
         self.timestep += 1
         print("reward : "+str(reward)+str("\n"))
-        return self.grid.flatten(), agent_rewards, self.done
+
+        # create observation vector of agent position(s) and target position
+        observations = []
+        for a in self.agents:
+            observations.append(a.pos_x)
+            observations.append(a.pos_y)
+        observations.append(self.target.pos_x)
+        observations.append(self.target.pos_y)
+
+        return observations, agent_rewards, self.done
 
     def reset(self):
         self.timestep = 0
         for a in self.agents:
             a.reset()
         self.target.reset()
-        pass
+
+        observations = []
+        for a in self.agents:
+            observations.append(a.pos_x)
+            observations.append(a.pos_y)
+        observations.append(self.target.pos_x)
+        observations.append(self.target.pos_y)
+        return observations
 
     def grid_reset(self):
         self.grid = np.zeros([self.width, self.height])
+
+
+if __name__ == "__main__":
+    game = Gridworld(10, 5, 1)
+    obs = torch.Tensor(game.reset())
+    action = game.agents[0].compute_action(obs)  #softmax
+    action_converted = action.numpy()
+    index, value = max(enumerate(action_converted), key=operator.itemgetter(1))
+    action_converted = index
+    obs, reward, done = game.step(action_converted)
