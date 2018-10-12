@@ -15,6 +15,9 @@ class Gridworld():
         self.timestep = 0
         self.done = False
 
+        self.set_agent_pos()
+        self.set_target_pos()
+
     def set_agent_pos(self):
         for a in self.agents:
             pos_x = a.pos_x
@@ -41,7 +44,8 @@ class Gridworld():
 
         self.target.move_random()
         # update positions in the grid world
-        self.set_agent_pos(self.agents)
+        self.grid_reset()
+        self.set_agent_pos()
         self.set_target_pos(random_pos=False)
 
         for a in self.agents:
@@ -52,6 +56,7 @@ class Gridworld():
                 agent_rewards.append(0)
 
         self.timestep += 1
+        print("reward : "+str(reward)+str("\n"))
         return self.grid.flatten(), agent_rewards, self.done
 
     def reset(self):
@@ -60,3 +65,6 @@ class Gridworld():
             a.reset()
         self.target.reset()
         pass
+
+    def grid_reset(self):
+        self.grid = np.zeros([self.width, self.height])
