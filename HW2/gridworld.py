@@ -4,6 +4,7 @@ from operator import attrgetter
 from entities import Agent, Target
 import torch
 import operator
+from replay_memory import ReplayMemory, Transition
 
 
 class Gridworld():
@@ -37,14 +38,12 @@ class Gridworld():
             pos_y = self.target.pos_y
         self.grid[pos_x][pos_y] = 8
 
-    def step(self, obs):
-        agent_rewards = []
+    def step(self, action):
         reward = 0
         reward -= 0.5  # negative reward for each step
         # generate next action
         for a in self.agents:
-            a.compute_action(obs)
-            a.update_pos()
+            a.update_pos(action)
 
         self.target.move_random()
         # update positions in the grid world
@@ -54,10 +53,8 @@ class Gridworld():
 
         for a in self.agents:
             if a.pos_x == self.target.pos_x and a.pos_y == self.target.pos_y:
-                agent_rewards.append(20)
+                reward += 20
                 self.done = True
-            else:
-                agent_rewards.append(0)
 
         self.timestep += 1
         print("reward : "+str(reward)+str("\n"))
@@ -70,7 +67,7 @@ class Gridworld():
         observations.append(self.target.pos_x)
         observations.append(self.target.pos_y)
 
-        return observations, agent_rewards, self.done
+        return observations, reward, self.done
 
     def reset(self):
         self.timestep = 0
@@ -91,10 +88,45 @@ class Gridworld():
 
 
 if __name__ == "__main__":
+    ### Args ###
+    num_steps = 25
+    batch_size = 16
+    updates_per_step = 5
+    num_episodes = 100
+    ######################
+
     game = Gridworld(10, 5, 1)
-    obs = torch.Tensor(game.reset())
-    action = game.agents[0].compute_action(obs)  #softmax
-    action_converted = action.numpy()
-    index, value = max(enumerate(action_converted), key=operator.itemgetter(1))
-    action_converted = index
-    obs, reward, done = game.step(action_converted)
+    memory = ReplayMemory(1000)
+
+    ### DDPG ###
+    episode_reward_list = []  #iterate this is the one to plot per epoch
+
+    for i_episode in range(num_episodes):
+        obs = torch.Tensor([game.reset()])  #reset at start of each episode
+        episode_reward = 0
+        for t in range(num_steps):  #TODO: make args
+            action = game.agents[0].compute_action(obs)  #softmax
+            action_converted = action.numpy()
+            index, value = max(enumerate(action_converted), key=operator.itemgetter(1))
+            action_converted = index  #this is the action to choose
+            next_obs, reward, done = game.step(action_converted)
+            episode_reward += reward
+
+            action_converted = torch.Tensor([action_converted])
+            reward = torch.Tensor([reward])
+            mask = torch.Tensor([not done])
+            next_obs = torch.Tensor([next_obs])
+            reward = torch.Tensor([reward])
+            memory.push(obs, action, mask, next_obs, reward)
+            obs = next_obs
+
+            if len(memory) > batch_size * 5:
+                for _ in range(updates_per_step):
+                    transitions = memory.sample(batch_size)  # line 11
+                    batch = Transition(*zip(*transitions))
+
+                    game.agents[0].update_params(batch)
+            if done:
+                break
+        print("Episode reward = " + str(episode_reward))
+        episode_reward_list.append(episode_reward)

@@ -36,12 +36,12 @@ class Actor(nn.Module):
         self.linear1 = nn.Linear(num_inputs, hidden_size)  # has 2 parameters: weights, biases
 
         self.linear2 = nn.Linear(hidden_size, hidden_size)
-        self.linear2.weight.data.mul_(10)
-        self.linear2.bias.data.mul_(10)
+        self.linear2.weight.data.mul_(0.1)
+        self.linear2.bias.data.mul_(0.1)
 
         self.mu = nn.Linear(hidden_size, num_outputs)
-        self.mu.weight.data.mul_(10)
-        self.mu.bias.data.mul_(10)
+        self.mu.weight.data.mul_(0.1)
+        self.mu.bias.data.mul_(0.1)
 
         print("num_actions = " + str(num_outputs))
         print("num_inputs = " + str(num_inputs))
@@ -49,10 +49,10 @@ class Actor(nn.Module):
     def forward(self, inputs):
         x = inputs
         x = self.layerN1(x)
-        x = F.tanh(self.linear1(x))
+        x = torch.tanh(self.linear1(x))
         x = self.layerN2(x)
-        x = F.tanh(self.linear2(x))
-        mu = F.tanh(self.mu(x))
+        x = torch.tanh(self.linear2(x))
+        mu = torch.tanh(self.mu(x))
         output = F.softmax(mu)
         return output
 
@@ -130,7 +130,8 @@ class DDPG(object):
         if exploration is not None:
             mu += torch.Tensor(exploration.noise())
 
-        return mu.clamp(-1, 1)
+        # return mu.clamp(-1, 1)
+        return mu
 
     def update_parameters(self, batch):
         state_batch = Variable(torch.cat(batch.state))
