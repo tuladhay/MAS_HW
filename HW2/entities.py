@@ -6,15 +6,12 @@ class Agent:
     def __init__(self, width=10, height=5):
         self.pos_x = 4
         self.pos_y = 4
-        self.old_pos_x = self.pos_x
-        self.old_pos_y = self.pos_y
         # for actor critic
-        self.policy = algorithms.DDPG(0.99,0.01,10,4,4)
-
+        self.policy = algorithms.DDPG(0.99, 0.01, 32, 4, 4)
         self.action = None
         self.width = width - 1  # grid positions are from 0 - 9
         self.height = height - 1
-        self.verbose = True
+        self.verbose = False
 
     def compute_action(self, obs):
         # TODO: REPLACE THIS WITH A LEARNING ALGORITHM
@@ -57,18 +54,14 @@ class Agent:
             print("invalid action")
 
     def reset(self):
-        self.pos_x = 4
-        self.pos_y = 4
-        self.old_pos_x = 0
-        self.old_pos_y = 0
+        self.pos_x = random.randint(0, self.width)
+        self.pos_y = random.randint(0, self.height)
 
 
 class Target:
     def __init__(self, width_max=10, height_max=5):
         self.pos_x = 9
         self.pos_y = 0
-        self.old_pos_x = self.pos_x
-        self.old_pos_y = self.pos_y
         self.width = width_max - 1
         self.height = height_max - 1
 
@@ -100,5 +93,3 @@ class Target:
     def reset(self):
         self.pos_x = 9
         self.pos_y = 0
-        self.old_pos_x = 0
-        self.old_pos_y = 0

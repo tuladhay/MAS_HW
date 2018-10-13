@@ -5,7 +5,7 @@ from entities import Agent, Target
 import torch
 import operator
 from replay_memory import ReplayMemory, Transition
-
+import math
 
 class Gridworld():
     def __init__(self, width, height, n_agents):
@@ -16,7 +16,6 @@ class Gridworld():
         self.target = Target()
         self.grid = np.zeros([self.width, self.height])
         self.timestep = 0
-        self.done = False
 
         self.set_agent_pos()
         self.set_target_pos()
@@ -39,25 +38,30 @@ class Gridworld():
         self.grid[pos_x][pos_y] = 8
 
     def step(self, action):
+        done = False
         reward = 0
-        reward -= 0.5  # negative reward for each step
+        reward -= 1  # negative reward for each step
         # generate next action
         for a in self.agents:
             a.update_pos(action)
 
-        self.target.move_random()
+        #self.target.move_random()  # TODO: remove this stationary target
+
         # update positions in the grid world
         self.grid_reset()
         self.set_agent_pos()
         self.set_target_pos(random_pos=False)
 
+        dist = math.sqrt((self.agents[0].pos_x - self.target.pos_x) ** 2 + (self.agents[0].pos_y - self.target.pos_y) ** 2)
+        reward = reward - abs(0.5*dist)
+
         for a in self.agents:
             if a.pos_x == self.target.pos_x and a.pos_y == self.target.pos_y:
-                reward += 20
-                self.done = True
+                reward += 1000
+                done = True
 
         self.timestep += 1
-        print("reward : "+str(reward)+str("\n"))
+        #print("reward : "+str(reward)+str("\n"))
 
         # create observation vector of agent position(s) and target position
         observations = []
@@ -67,7 +71,7 @@ class Gridworld():
         observations.append(self.target.pos_x)
         observations.append(self.target.pos_y)
 
-        return observations, reward, self.done
+        return observations, reward, done
 
     def reset(self):
         self.timestep = 0
@@ -92,11 +96,11 @@ if __name__ == "__main__":
     num_steps = 25
     batch_size = 16
     updates_per_step = 5
-    num_episodes = 100
+    num_episodes = 1000
     ######################
 
     game = Gridworld(10, 5, 1)
-    memory = ReplayMemory(1000)
+    memory = ReplayMemory(1000000)
 
     ### DDPG ###
     episode_reward_list = []  #iterate this is the one to plot per epoch
@@ -106,7 +110,7 @@ if __name__ == "__main__":
         episode_reward = 0
         for t in range(num_steps):  #TODO: make args
             action = game.agents[0].compute_action(obs)  #softmax
-            action_converted = action.numpy()
+            action_converted = action[0].numpy()  # since it was a list[list]
             index, value = max(enumerate(action_converted), key=operator.itemgetter(1))
             action_converted = index  #this is the action to choose
             next_obs, reward, done = game.step(action_converted)

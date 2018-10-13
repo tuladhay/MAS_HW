@@ -36,12 +36,12 @@ class Actor(nn.Module):
         self.linear1 = nn.Linear(num_inputs, hidden_size)  # has 2 parameters: weights, biases
 
         self.linear2 = nn.Linear(hidden_size, hidden_size)
-        self.linear2.weight.data.mul_(0.1)
-        self.linear2.bias.data.mul_(0.1)
+        self.linear2.weight.data.mul_(10)
+        self.linear2.bias.data.mul_(10)
 
         self.mu = nn.Linear(hidden_size, num_outputs)
-        self.mu.weight.data.mul_(0.1)
-        self.mu.bias.data.mul_(0.1)
+        self.mu.weight.data.mul_(10)
+        self.mu.bias.data.mul_(10)
 
         print("num_actions = " + str(num_outputs))
         print("num_inputs = " + str(num_inputs))
@@ -106,11 +106,11 @@ class DDPG(object):
 
         self.actor = Actor(hidden_size, self.num_inputs, self.action_space)
         self.actor_target = Actor(hidden_size, self.num_inputs, self.action_space)
-        self.actor_optim = Adam(self.actor.parameters(), lr=1e-4)
+        self.actor_optim = Adam(self.actor.parameters(), lr=1e-3)
 
         self.critic = Critic(hidden_size, self.num_inputs, self.action_space)
         self.critic_target = Critic(hidden_size, self.num_inputs, self.action_space)
-        self.critic_optim = Adam(self.critic.parameters(), lr=1e-4)
+        self.critic_optim = Adam(self.critic.parameters(), lr=1e-3)
 
         self.gamma = gamma
         self.tau = tau
@@ -123,7 +123,7 @@ class DDPG(object):
         self.actor.eval()  # Set the network in evaluation mode
         with torch.no_grad():
             mu = self.actor((Variable(state)))
-            # since Actor class has only one funciton, I think it goes through the "forward"
+            # since Actor class has only one function, I think it goes through the "forward"
             # Now it has passed through the actor>forward
         self.actor.train()  # Set the network in training model
         mu = mu.data
