@@ -6,6 +6,7 @@ import torch
 import operator
 from replay_memory import ReplayMemory, Transition
 import math
+import matplotlib.pylab as plt
 
 
 class Gridworld():
@@ -40,11 +41,11 @@ class Gridworld():
     def step(self, action):
         done = False
         reward = 0
-        reward -= 1  # negative reward for each step
+        reward -= 0.5  # negative reward for each step
         # generate next action
         self.agent1.update_pos(action)
 
-        #self.target.move_random()  # TODO: remove this stationary target
+        self.target.move_random()  # TODO: remove this stationary target
 
         # update positions in the grid world
         self.grid_reset()
@@ -55,7 +56,7 @@ class Gridworld():
         #reward = reward - abs(0.5*dist)
 
         if self.agent1.pos_x == self.target.pos_x and self.agent1.pos_y == self.target.pos_y:
-            reward += 100
+            reward += 1000
             done = True
 
         self.timestep += 1
@@ -88,14 +89,13 @@ class Gridworld():
 
 if __name__ == "__main__":
     ### Args ###
-    num_steps = 50
+    num_steps = 200
     batch_size = 16
-    updates_per_step = 5
-    num_episodes = 1000
+    num_episodes = 2000
     num_actions = 4
 
-    gamma = 0.99
-    lamda = 0.1
+    gamma = 0.8
+    lamda = 0.25
 
     ######################
 
@@ -131,6 +131,10 @@ if __name__ == "__main__":
                 index, current_act_value = max(enumerate(action_values), key=operator.itemgetter(1))
                 action = index
 
+            randon_num = random.random()
+            if randon_num < 0.1:
+                action = random.randint(0, 3)
+
             # take one step
             next_obs, reward, done = game.step(action)
             episode_reward += reward
@@ -150,6 +154,11 @@ if __name__ == "__main__":
             if done:
                 break
 
-
-        print("Episode " + str(i_episode) + ". Total reward: " + str(episode_reward))
+        if i_episode%100==0:
+            print("Episode " + str(i_episode) + ". Total reward: " + str(episode_reward))
         episode_reward_list.append(episode_reward)
+    plt.plot(episode_reward_list)
+    plt.title("Total rewards vs episodes")
+    plt.xlabel("Episodes")
+    plt.ylabel("Total Rewards")
+    plt.show()
