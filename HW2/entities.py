@@ -14,7 +14,6 @@ class Agent:
         self.verbose = False
 
     def compute_action(self, obs):
-        # TODO: REPLACE THIS WITH A LEARNING ALGORITHM
         action = self.policy.select_action(obs)
         return action
 

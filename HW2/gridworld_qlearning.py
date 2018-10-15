@@ -1,9 +1,7 @@
 import numpy as np
 import random
 from entities import Agent, Target
-import torch
 import operator
-import math
 import matplotlib.pylab as plt
 
 
@@ -89,12 +87,13 @@ if __name__ == "__main__":
     ### Args ###
     num_steps = 200
     batch_size = 16
-    num_episodes = 20000
+    num_episodes = 5000
     num_actions = 4
+    statistical_runs = 1
 
-    gamma = 0.8
+    gamma = 0.99
     lamda = 0.25
-    epsilon = 0.1  # e-greedy
+    epsilon = 0.10  # e-greedy
 
     ######################
 
@@ -112,50 +111,56 @@ if __name__ == "__main__":
                         q_table[(i,j,k,l,a)] = 10
 
     print("Q-table initialized")
+    stat_run_episode_returns = []  #list of lists
+    for srun in range(statistical_runs):
+        for i_episode in range(num_episodes):
+            obs = game.reset()  # reset at start of each episode
+            episode_reward = 0
+            for t in range(num_steps):  #TODO: make args
+                ''' get actions for that state '''
+                action_values = []
+                for n in range(num_actions):
+                    action_values.append(q_table[(obs[0], obs[1], obs[2], obs[3], n)])  # FOR SINGE AGENT and TARGET
 
-    for i_episode in range(num_episodes):
-        obs = game.reset()  # reset at start of each episode
-        episode_reward = 0
-        for t in range(num_steps):  #TODO: make args
-            ''' get actions for that state '''
-            action_values = []
-            for n in range(num_actions):
-                action_values.append(q_table[(obs[0], obs[1], obs[2], obs[3], n)])  # FOR SINGE AGENT and TARGET
+                # get max value
+                if all(action_values[0] == v for v in action_values):  # when all values are equal
+                    action = random.randint(0, num_actions-1)
+                    current_act_value = action_values[0]
+                else:
+                    index, current_act_value = max(enumerate(action_values), key=operator.itemgetter(1))
+                    action = index
 
-            # get max value
-            if all(action_values[0] == v for v in action_values):  # when all values are equal
-                action = random.randint(0, num_actions-1)
-                current_act_value = action_values[0]
-            else:
-                index, current_act_value = max(enumerate(action_values), key=operator.itemgetter(1))
-                action = index
+                randon_num = random.random()
+                if randon_num < epsilon:
+                    action = random.randint(0, 3)
 
-            randon_num = random.random()
-            if randon_num < epsilon:
-                action = random.randint(0, 3)
+                # take one step
+                next_obs, reward, done = game.step(action)
+                episode_reward += reward
 
-            # take one step
-            next_obs, reward, done = game.step(action)
-            episode_reward += reward
+                ''' get value for next state Q(s', a') '''
+                action_values = []
+                for n in range(num_actions):
+                    action_values.append(q_table[(next_obs[0], next_obs[1], next_obs[2], next_obs[3], n)])  # FOR SINGE AGENT and TARGET
 
-            ''' get value for next state Q(s', a') '''
-            action_values = []
-            for n in range(num_actions):
-                action_values.append(q_table[(next_obs[0], next_obs[1], next_obs[2], next_obs[3], n)])  # FOR SINGE AGENT and TARGET
+                # get max value
+                _, next_act_value = max(enumerate(action_values), key=operator.itemgetter(1))  # we have the value for Q(s',a') now
 
-            # get max value
-            _, next_act_value = max(enumerate(action_values), key=operator.itemgetter(1))  # we have the value for Q(s',a') now
+                # update the q-values
+                q_table[(obs[0], obs[1], obs[2], obs[3], action)] += lamda*(reward + gamma*next_act_value - current_act_value)
 
-            # update the q-values
-            q_table[(obs[0], obs[1], obs[2], obs[3], action)] += lamda*(reward + gamma*next_act_value - current_act_value)
+                obs = next_obs
+                if done:
+                    break
+                # end of timesteps
 
-            obs = next_obs
-            if done:
-                break
+            if i_episode%100==0:
+                print("Episode " + str(i_episode) + ". Total reward: " + str(episode_reward))
+            episode_reward_list.append(episode_reward)
+            # end of episodes
+        # for each statistical run
+        stat_run_episode_returns.append(episode_reward_list)
 
-        if i_episode%100==0:
-            print("Episode " + str(i_episode) + ". Total reward: " + str(episode_reward))
-        episode_reward_list.append(episode_reward)
     plt.plot(episode_reward_list)
     plt.title("Total rewards vs episodes while learning")
     plt.xlabel("Episodes")

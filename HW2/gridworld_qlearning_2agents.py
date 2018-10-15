@@ -43,14 +43,18 @@ class Gridworld():
 
     def step(self, action, action2):
         done = False
+        # Individual rewards
         reward = 0
         reward_2 = 0
         reward -= 1  # negative reward for each step
         reward_2 -= 1
+        # shared system reward
+        system_reward = 0
+
         # generate next action
         self.agent1.update_pos(action)
         self.agent2.update_pos(action2)
-        self.target.move_random()  # TODO: remove this stationary target
+        self.target.move_random()  # TODO: remove this for stationary target
 
         # update positions in the grid world
         self.grid_reset()
@@ -60,14 +64,19 @@ class Gridworld():
         # dist = math.sqrt((self.agent1.pos_x - self.target.pos_x) ** 2 + (self.agent1.pos_y - self.target.pos_y) ** 2)
         # reward = reward - abs(0.1*dist)
 
+        done1 = False
+        done2 = False
         # if agent 1 reaches the target
         if self.agent1.pos_x == self.target.pos_x and self.agent1.pos_y == self.target.pos_y:
             reward += 20
-            done = True
+            done1 = True
 
         # if agent2 reaches the target
         if self.agent2.pos_x == self.target.pos_x and self.agent2.pos_y == self.target.pos_y:
             reward_2 += 20
+            done2 = True
+
+        if (done1 == True) or (done2 == True):
             done = True
 
         # create observation vector of agent position(s) and target position
@@ -102,10 +111,10 @@ class Gridworld():
 if __name__ == "__main__":
     ### Args ###
     num_steps = 200
-    num_episodes = 20000
+    num_episodes = 50000
     num_actions = 4
 
-    gamma = 0.8
+    gamma = 0.99
     lamda = 0.25
     epsilon = 0.1  # e-greedy
 
@@ -176,6 +185,11 @@ if __name__ == "__main__":
             episode_reward += reward
             episode_reward_2 += reward_2
 
+            '''Use system reward (Part 3) '''
+            system_reward = reward + reward_2
+            reward = system_reward
+            reward_2 = system_reward
+
             ''' get value for next state Q(s', a') '''
             action_values = []
             action_values_2 = []
@@ -202,10 +216,15 @@ if __name__ == "__main__":
         episode_reward_list_2.append(episode_reward_2)
 
     plt.plot(episode_reward_list)
-    plt.plot(episode_reward_list_2)
-    plt.title("Total rewards vs episodes while learning")
+    plt.title("Agent1 rewards vs episodes while training")
     plt.xlabel("Episodes")
-    plt.ylabel("Total Rewards")
+    plt.ylabel("Total Episode Rewards")
+    plt.show()
+
+    plt.plot(episode_reward_list_2)
+    plt.title("Agent2 rewards vs episodes while training")
+    plt.xlabel("Episodes")
+    plt.ylabel("Total Episode Rewards")
     plt.show()
 
     ''' Now for testing '''
@@ -256,9 +275,15 @@ if __name__ == "__main__":
         test_episode_reward_list_2.append(episode_reward_2)
 
     plt.plot(test_episode_reward_list)
-    plt.plot(test_episode_reward_list_2)
-    plt.title("Total rewards vs episodes while testing")
+    plt.title("Agent1 rewards vs episodes while testing")
     plt.xlabel("Episodes")
-    plt.ylabel("Total Rewards")
-    plt.ylim(-250, 25)
+    plt.ylabel("Total Episode Rewards")
+    plt.ylim(-250, 50)
+    plt.show()
+
+    plt.plot(test_episode_reward_list_2)
+    plt.title("Agent2 rewards vs episodes while testing")
+    plt.xlabel("Episodes")
+    plt.ylabel("Total Episode Rewards")
+    plt.ylim(-250, 50)
     plt.show()
