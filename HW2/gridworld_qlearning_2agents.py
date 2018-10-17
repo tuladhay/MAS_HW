@@ -1,7 +1,6 @@
 import numpy as np
 import random
 from entities import Agent, Target
-import torch
 import operator
 import math
 import matplotlib.pylab as plt
@@ -48,24 +47,21 @@ class Gridworld():
         reward_2 = 0
         reward -= 1  # negative reward for each step
         reward_2 -= 1
-        # shared system reward
-        system_reward = 0
 
         # generate next action
         self.agent1.update_pos(action)
         self.agent2.update_pos(action2)
-        self.target.move_random()  # TODO: remove this for stationary target
 
         # update positions in the grid world
         self.grid_reset()
         self.set_agent_pos()
-        self.set_target_pos(random_pos=False)
 
         # dist = math.sqrt((self.agent1.pos_x - self.target.pos_x) ** 2 + (self.agent1.pos_y - self.target.pos_y) ** 2)
         # reward = reward - abs(0.1*dist)
 
         done1 = False
         done2 = False
+
         # if agent 1 reaches the target
         if self.agent1.pos_x == self.target.pos_x and self.agent1.pos_y == self.target.pos_y:
             reward += 20
@@ -76,8 +72,9 @@ class Gridworld():
             reward_2 += 20
             done2 = True
 
-        if (done1 == True) or (done2 == True):
+        if (done1 == True) | (done2 == True):
             done = True
+
 
         # create observation vector of agent position(s) and target position
         observations = []
@@ -88,11 +85,14 @@ class Gridworld():
         observations.append(self.target.pos_x)
         observations.append(self.target.pos_y)
 
+        #self.target.move_random()  # TODO: remove this for stationary target
+        self.set_target_pos(random_pos=False)
+
         return observations, reward, reward_2, done
 
     def reset(self):
         self.agent1.reset()
-        self.agent2.reset()
+        self.agent2.reset(self.agent1.pos_x, self.agent1.pos_y, use_given_start=True)  # true to use same starting location
         self.target.reset()
 
         observations = []
@@ -111,18 +111,21 @@ class Gridworld():
 if __name__ == "__main__":
     ### Args ###
     num_steps = 200
-    num_episodes = 50000
+    num_episodes = 20000
     num_actions = 4
 
     gamma = 0.99
     lamda = 0.25
-    epsilon = 0.1  # e-greedy
+    epsilon = 0.05  # e-greedy
+
+    use_system_reward = False
 
     ######################
 
     game = Gridworld(10, 5, 1)
     episode_reward_list = []    # Agent1 iterate this is the one to plot per epoch
     episode_reward_list_2 = []  # Agent2
+    system_reward_list = []
 
     # make a Q-table dictionary
     q_table = {}
@@ -141,9 +144,16 @@ if __name__ == "__main__":
 
     for i_episode in range(num_episodes):
         obs = game.reset()  #reset at start of each episode
+
         episode_reward = 0  # agent1
         episode_reward_2 = 0  # agent2
+        if use_system_reward:
+            episode_system_reward = 0
+
         for t in range(num_steps):  #TODO: make args
+            reward = 0
+            reward_2 = 0
+
             ''' get actions for that state '''
             action_values = []
             action_values_2 = []
@@ -182,13 +192,18 @@ if __name__ == "__main__":
 
             # take one step
             next_obs, reward, reward_2, done = game.step(action, action_2)
-            episode_reward += reward
-            episode_reward_2 += reward_2
 
-            '''Use system reward (Part 3) '''
-            system_reward = reward + reward_2
-            reward = system_reward
-            reward_2 = system_reward
+            # accumulate rewards
+            episode_reward = episode_reward + reward
+            episode_reward_2 = episode_reward_2 + reward_2
+
+            '''Use system reward (Part 3). Comment out if not using system reward'''
+            # if use_system_reward:
+            if use_system_reward:
+                system_reward = reward + reward_2
+                reward = system_reward
+                reward_2 = system_reward
+                episode_system_reward += system_reward
 
             ''' get value for next state Q(s', a') '''
             action_values = []
@@ -204,16 +219,20 @@ if __name__ == "__main__":
 
             # update the q-values
             q_table[(obs[0], obs[1], obs[2], obs[3], obs[4], obs[5], action)] += lamda*(reward + gamma*next_act_value - current_act_value)
-            q_table_2[(obs[0], obs[1], obs[2], obs[3], obs[4], obs[5], action_2)] += lamda * (reward_2 + gamma * next_act_value_2 - current_act_value_2)
+            q_table_2[(obs[0], obs[1], obs[2], obs[3], obs[4], obs[5], action_2)] += lamda*(reward_2 + gamma*next_act_value_2 - current_act_value_2)
+            print(q_table[(obs[0], obs[1], obs[2], obs[3], obs[4], obs[5], action)])
+
 
             obs = next_obs
             if done:
                 break
 
         if i_episode%100==0:
-            print("Episode " + str(i_episode) + ". Total reward: " + str(episode_reward))
+            print("Episode " + str(i_episode) + ". Total reward: " + str(episode_reward_2))
         episode_reward_list.append(episode_reward)
         episode_reward_list_2.append(episode_reward_2)
+        if use_system_reward:
+            system_reward_list.append(episode_system_reward)
 
     plt.plot(episode_reward_list)
     plt.title("Agent1 rewards vs episodes while training")
@@ -226,6 +245,14 @@ if __name__ == "__main__":
     plt.xlabel("Episodes")
     plt.ylabel("Total Episode Rewards")
     plt.show()
+
+    '''IF USING SYSTEM REWARD'''
+    if use_system_reward:
+        plt.plot(episode_reward_list_2)
+        plt.title("System rewards vs episodes while training")
+        plt.xlabel("Episodes")
+        plt.ylabel("Total Episode Rewards")
+        plt.show()
 
     ''' Now for testing '''
     test_episode_reward_list = []
@@ -269,8 +296,8 @@ if __name__ == "__main__":
             if done:
                 break
 
-        if i_episode % 100 == 0:
-            print("Test Episode " + str(i_episode) + ". Total reward: " + str(episode_reward))
+        # if i_episode % 100 == 0:
+        #     print("Test Episode " + str(i_episode) + ". Total reward: " + str(episode_reward))
         test_episode_reward_list.append(episode_reward)
         test_episode_reward_list_2.append(episode_reward_2)
 

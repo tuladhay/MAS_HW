@@ -52,9 +52,13 @@ class Agent:
         else:
             print("invalid action")
 
-    def reset(self):
-        self.pos_x = random.randint(0, self.width)
-        self.pos_y = random.randint(0, self.height)
+    def reset(self, x=4, y=4, use_given_start=False):  # Option to use starting position of other agent
+        if use_given_start:
+            self.pos_x = x
+            self.pos_y = y
+        else:
+            self.pos_x = random.randint(0, self.width)
+            self.pos_y = random.randint(0, self.height)
 
 
 class Target:
