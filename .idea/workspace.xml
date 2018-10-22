@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ee9d47de-f3f1-4f38-aa87-a8b7e34b3e20" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/HW2/entities.py" beforeDir="false" afterPath="$PROJECT_DIR$/HW2/entities.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HW2/gridworld_qlearning_2agents.py" beforeDir="false" afterPath="$PROJECT_DIR$/HW2/gridworld_qlearning_2agents.py" afterDir="false" />
-    </list>
+    <list default="true" id="ee9d47de-f3f1-4f38-aa87-a8b7e34b3e20" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,6 +42,7 @@
     <session id="-1306788975">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
+          <entry key="project.closed" value="1" />
           <entry key="project.open.time.0" value="1" />
           <entry key="project.opened" value="1" />
         </counts>
@@ -311,9 +309,9 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="57" y="-4" width="1806" height="1144" extended-state="6" />
+    <frame x="57" y="-4" width="1863" height="1204" extended-state="6" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.70267594" visible="true" weight="0.50028014" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.70267594" visible="true" weight="0.27741584" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -324,7 +322,7 @@
       <window_info anchor="bottom" id="TODO" order="5" />
       <window_info anchor="bottom" id="Version Control" order="6" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.5042017" side_tool="true" weight="0.2890625" />
-      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.49837133" weight="0.24884793" />
+      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.49837133" visible="true" weight="0.23502304" />
       <window_info anchor="bottom" id="Python Console" order="9" sideWeight="0.497479" weight="0.31933594" />
       <window_info anchor="bottom" id="Debug" order="10" sideWeight="0.5049917" side_tool="true" weight="0.20254958" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
