@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import random
 from copy import copy
 
+# Mod: changing the rewards from equally divided, to straighforward G reward for each agent
+
 class Agents:
     def __init__(self, n_agents, n_nights, b, epsilon):
         self.n_agents = n_agents
@@ -11,7 +13,7 @@ class Agents:
         self.b = b
         self.gamma = 0.1  # learning rate
         np.random.seed(0)
-        self.value_table = np.random.uniform(0, 1, [self.n_agents, self.n_nights])
+        self.value_table = np.random.uniform(0, 10, [self.n_agents, self.n_nights])
         self.chosen_actions = []
         self.cf_actions = []
         self.epsilon = epsilon
@@ -36,7 +38,7 @@ class Agents:
             reward = nights_selected_dict[k]*np.exp(-nights_selected_dict[k]/self.b)
             global_reward += reward
         # return equally distributed reward
-        self.global_rewards = global_reward*np.ones(self.n_agents)/self.n_agents
+        self.global_rewards = global_reward*np.ones(self.n_agents)
         return self.global_rewards  # This is a list for individual agent rewards. Sum to get G
 
     def get_local_reward(self):
@@ -58,7 +60,9 @@ class Agents:
             # append it to list for each agent difference reward
             d_reward_list[a] = agent_d_reward
 
-        self.temp.append(np.sum(self.get_global_reward(counterfactual=True)))
+        #self.temp.append(np.sum(self.get_global_reward(counterfactual=True)))
+        # save G that was trained using Difference Rewards -> Connor
+        self.temp.append(np.sum(G_reward))
             #print(np.sum(self.get_global_reward(counterfactual=True)[a]))
             #print(str(self.get_global_reward()[a]) + " - " + str(self.get_global_reward(counterfactual=True)[a] )  + " = " + str(agent_d_reward) )
         return d_reward_list
