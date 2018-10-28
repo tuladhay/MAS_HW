@@ -20,6 +20,7 @@ class Agents:
         self.global_rewards = []  # carries a list of reward for each agent. Sum it to get G
 
         self.temp = []  # G that was trained using difference rewards
+        self.temp2 = []
         self.local = []  # G that was trained using local rewards
 
     def select_actions(self):
@@ -31,7 +32,7 @@ class Agents:
 
     def get_global_reward(self, counterfactual=False):
         # For global rewards we don't have to loop over agents since it's "Global"
-	# Calculate how many times each night was chosen by the agents
+        # Calculate how many times each night was chosen by the agents
         nights_selected_dict = Counter(self.chosen_actions)
         if counterfactual:
             nights_selected_dict = Counter(self.cf_actions)
@@ -58,6 +59,7 @@ class Agents:
         return local_reward_list
 
     def get_difference_reward(self):
+        '''Counterfactual = Random action'''
         G_reward = self.get_global_reward()
         d_reward_list = np.zeros(self.n_agents)
         for a in range(self.n_agents):
@@ -77,6 +79,30 @@ class Agents:
         self.temp.append(np.sum(G_reward))
         return d_reward_list
 
+    def get_difference_reward_2(self):
+        '''Counterfactual = self removal'''
+        G_reward = self.get_global_reward()
+        d2_reward_list = np.zeros(self.n_agents)
+
+        for a in range(self.n_agents):
+            # copy what the actual actions were
+            self.cf_actions = copy(self.chosen_actions)
+            # replace with a counterfactual action
+            self.cf_actions[a] = 100
+            '''The idea here is that if the cf_action is set to 100, then in the get_global_reward(counterfactual=True),
+            since it loops over n_night and finds the number of agents in dictionary corresponding to the night, it will
+            never get to night=100, since the loop is over n_nights. So basically the agent would not be counted in the 
+            reward calculation'''
+            # calculate the difference reward for this agent
+            agent_d_reward = self.get_global_reward()[a] - self.get_global_reward(counterfactual=True)[a]
+            # append it to list for each agent difference reward
+            d2_reward_list[a] = agent_d_reward
+
+        # save G that was trained using Difference Rewards -> Connor
+        self.temp2.append(np.sum(G_reward))
+        return d2_reward_list
+
+
     def update_value_table(self, agent_reward):
         # agent_reward is a list with reward for each agent
         # the update has to depend on the action taken, and the agent_reward
@@ -84,15 +110,9 @@ class Agents:
             self.value_table[agent, self.chosen_actions[agent]] += self.gamma*(agent_reward[agent]-self.value_table[agent, self.chosen_actions[agent]])
 
 
-if __name__=="__main__":
-    # Parameters
-    n_agents = 30
-    n_nights = 7
-    b = 5
-    n_episodes = 2000
-    epsilon = 0.02
-
-    # Global Rewards
+#if __name__=="__main__":
+def main():
+    '''Global Rewards'''
     episode_returns = []
     agents = Agents(n_agents, n_nights, b, epsilon)
 
@@ -104,19 +124,52 @@ if __name__=="__main__":
         #print(rewards)
         episode_returns.append(np.sum(rewards))  # this is the total rewards for all agents
         agents.update_value_table(rewards)
-    plt.plot(np.divide(episode_returns,n_agents))
+    #plt.plot(np.divide(episode_returns,n_agents))
+    plt.xlabel("Episodes (Weeks)")
+    plt.ylabel("Total Returns")
+    plt.title("Global Reward, Agents=30, k=7, b=5")
+    #print(agents.chosen_actions)
+    h = np.hstack(agents.chosen_actions)
 
-    # Difference Rewards
+    # for statistical runs
+    stat_g_returns.append(episode_returns)
+
+    '''Difference Rewards'''
     agents = Agents(n_agents, n_nights, b, epsilon)
     for episode in range(n_episodes):
         agents.select_actions()
         # Get difference reward for each agent as a list
         rewards = agents.get_difference_reward()
         agents.update_value_table(rewards)
-    plt.plot(np.divide(agents.temp,n_agents))
-    #plt.show()
+    #plt.plot(np.divide(agents.temp,n_agents))
+    h_d = np.hstack(agents.chosen_actions)
+    plt.xlabel("Episodes (Weeks)")
+    plt.ylabel("Total Returns")
+    plt.title("Difference Reward (random action), Agents=30, k=7, b=5")
 
-    # Local Rewards
+    # for statistical runs
+    stat_d_returns.append(agents.temp)
+
+
+    '''Difference Rewards Removed Agent'''
+    agents = Agents(n_agents, n_nights, b, epsilon)
+    for episode in range(n_episodes):
+        agents.select_actions()
+        # Get difference reward for each agent as a list
+        rewards = agents.get_difference_reward_2()
+        agents.update_value_table(rewards)
+
+    h_d2 = np.hstack(agents.chosen_actions)
+    #plt.plot(np.divide(agents.temp2,n_agents))
+    plt.xlabel("Episodes (Weeks)")
+    plt.ylabel("Total Returns")
+    plt.title("Difference Reward (agent removed), Agents=30, k=7, b=5")
+
+    # for statistical runs
+    stat_d2_returns.append(agents.temp2)
+
+
+    '''Local Rewards'''
     agents = Agents(n_agents, n_nights, b, epsilon)
     local_episode_returns = []
     for episode in range(n_episodes):
@@ -124,5 +177,74 @@ if __name__=="__main__":
         # get local reward for each agent as a list
         rewards = agents.get_local_reward()
         agents.update_value_table(rewards)
+    h_l = np.hstack(agents.chosen_actions)
     #plt.plot(np.divide(agents.local,n_agents))
+    plt.xlabel("Episodes (Weeks)")
+    plt.ylabel("Total Returns")
+    plt.title("Local Reward, Agents=30, k=7, b=5")
+
+    # for statistical runs
+    stat_l_returns.append(agents.local)
+
+    # show rewards plot
+    #plt.show()
+
+
+    # # plot histograms
+    # plt.hist(h, bins=[1,2,3,4])
+    # plt.title("Global")
+    # plt.xlabel("nights")
+    # plt.ylabel("Agents Present")
+    # plt.show()
+    #
+    # plt.hist(h_d, bins=[1,2,3,4])
+    # plt.title("Difference Rewards (Random Action")
+    # plt.xlabel("nights")
+    # plt.ylabel("Agents Present")
+    # plt.show()
+    #
+    # plt.hist(h_d2, bins=[1,2,3,4])
+    # plt.title("Difference Rewards (Agent Removed)")
+    # plt.xlabel("nights")
+    # plt.ylabel("Agents Present")
+    # plt.show()
+    #
+    # plt.hist(h_l, bins=[1,2,3,4,5,6,7])
+    # plt.title("Local Rewards")
+    # plt.xlabel("nights")
+    # plt.ylabel("Agents Present")
+    # plt.show()
+
+
+
+
+if __name__=="__main__":
+    # Parameters
+    n_agents = 40
+    n_nights = 5
+    b = 4
+    n_episodes = 600
+    epsilon = 0.1
+
+    stat_runs = 20
+
+    stat_g_returns = []
+    stat_d_returns = []
+    stat_d2_returns = []
+    stat_l_returns = []
+
+
+    for n in range(stat_runs):
+        main()
+
+    print()
+    g = np.mean(stat_g_returns, axis=0)
+    d = np.mean(stat_d_returns, axis=0)
+    d2 = np.mean(stat_d2_returns, axis=0)
+    l = np.mean(stat_l_returns, axis=0)
+
+    plt.plot(np.divide(g, n_agents))
+    plt.plot(np.divide(d, n_agents))
+    plt.plot(np.divide(d2, n_agents))
+    plt.plot(np.divide(l, n_agents))
     plt.show()
