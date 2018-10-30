@@ -3,6 +3,8 @@ from collections import Counter
 import matplotlib.pyplot as plt
 import random
 from copy import copy
+import seaborn as sns; sns.set(color_codes=True)
+
 
 # Mod: changing the rewards from equally divided, to straighforward G reward for each agent
 
@@ -11,7 +13,7 @@ class Agents:
         self.n_agents = n_agents
         self.n_nights = n_nights
         self.b = b
-        self.gamma = 0.2  # learning rate
+        self.gamma = 0.1  # learning rate
         np.random.seed(0)
         self.value_table = np.random.uniform(0, 10, [self.n_agents, self.n_nights])
         self.chosen_actions = []
@@ -189,27 +191,26 @@ def main():
     # show rewards plot
     #plt.show()
 
-
-    # # plot histograms
-    # plt.hist(h, bins=[1,2,3,4])
+    # plot histograms
+    # plt.hist(h, bins=[0,1,2,3,4,5,6])
     # plt.title("Global")
     # plt.xlabel("nights")
     # plt.ylabel("Agents Present")
     # plt.show()
     #
-    # plt.hist(h_d, bins=[1,2,3,4])
+    # plt.hist(h_d, bins=[0,1,2,3,4,5,6])
     # plt.title("Difference Rewards (Random Action")
     # plt.xlabel("nights")
     # plt.ylabel("Agents Present")
     # plt.show()
     #
-    # plt.hist(h_d2, bins=[1,2,3,4])
+    # plt.hist(h_d2, bins=[0,1,2,3,4,5,6])
     # plt.title("Difference Rewards (Agent Removed)")
     # plt.xlabel("nights")
     # plt.ylabel("Agents Present")
     # plt.show()
     #
-    # plt.hist(h_l, bins=[1,2,3,4,5,6,7])
+    # plt.hist(h_l, bins=[0,1,2,3,4,5,6,7])
     # plt.title("Local Rewards")
     # plt.xlabel("nights")
     # plt.ylabel("Agents Present")
@@ -223,10 +224,10 @@ if __name__=="__main__":
     n_agents = 40
     n_nights = 5
     b = 4
-    n_episodes = 600
+    n_episodes = 1500
     epsilon = 0.1
 
-    stat_runs = 20
+    stat_runs = 10
 
     stat_g_returns = []
     stat_d_returns = []
@@ -238,13 +239,36 @@ if __name__=="__main__":
         main()
 
     print()
-    g = np.mean(stat_g_returns, axis=0)
-    d = np.mean(stat_d_returns, axis=0)
-    d2 = np.mean(stat_d2_returns, axis=0)
-    l = np.mean(stat_l_returns, axis=0)
+    x = [n for n in range(0, n_episodes, 20)]
+    g = []
+    for n in range(stat_runs):
+        g.append(stat_g_returns[n][0::20])
+    g_mean = np.mean(g, axis=0)
+    std = np.std(g, axis=0) / np.sqrt(stat_runs)
+    plt.errorbar(x, np.divide(g_mean, n_agents), yerr=np.divide(std,n_agents))
 
-    plt.plot(np.divide(g, n_agents))
-    plt.plot(np.divide(d, n_agents))
-    plt.plot(np.divide(d2, n_agents))
-    plt.plot(np.divide(l, n_agents))
+
+    d = []
+    for n in range(stat_runs):
+        d.append(stat_d_returns[n][0::20])
+    d_mean = np.mean(d, axis=0)
+    std = np.std(d, axis=0) / np.sqrt(stat_runs)
+    plt.errorbar(x, np.divide(d_mean, n_agents), yerr=np.divide(std,n_agents))
+
+    d2 = []
+    for n in range(stat_runs):
+        d2.append(stat_d2_returns[n][0::20])
+    d2_mean = np.mean(d2, axis=0)
+    std = np.std(d2, axis=0) / np.sqrt(stat_runs)
+    plt.errorbar(x, np.divide(d2_mean, n_agents), yerr=np.divide(std,n_agents))
+
+
+    l = []
+    for n in range(stat_runs):
+        l.append(stat_l_returns[n][0::20])
+    l_mean = np.mean(l, axis=0)
+    std = np.std(l, axis=0) / np.sqrt(stat_runs)
+    plt.errorbar(x, np.divide(l_mean, n_agents), yerr=np.divide(std,n_agents))
+
+    plt.title("Agents:40, K=5, b=4")
     plt.show()

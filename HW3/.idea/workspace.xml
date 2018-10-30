@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="14c0d66f-0dec-47a8-99df-bfb010526a21" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/environment_mod1.py" beforeDir="false" afterPath="$PROJECT_DIR$/environment_mod1.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -15,31 +16,32 @@
     <session id="-990451083">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="2" />
+          <entry key="project.closed" value="4" />
           <entry key="project.open.time.1" value="1" />
-          <entry key="project.open.time.2" value="2" />
-          <entry key="project.opened" value="3" />
+          <entry key="project.open.time.2" value="3" />
+          <entry key="project.open.time.9" value="1" />
+          <entry key="project.opened" value="5" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="py" value="3" />
+          <entry key="py" value="4" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="Python" value="3" />
+          <entry key="Python" value="4" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="Python Console" value="430" />
-          <entry key="py" value="4609" />
+          <entry key="Python Console" value="600" />
+          <entry key="py" value="5454" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="5039" />
+          <entry key="Python" value="6054" />
         </counts>
       </usages-collector>
     </session>
@@ -49,8 +51,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/environment_mod1.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="388">
-              <caret line="205" column="32" selection-start-line="205" selection-start-column="32" selection-end-line="205" selection-end-column="32" />
+            <state relative-caret-position="-703">
+              <caret line="222" column="9" selection-start-line="222" selection-start-column="9" selection-end-line="222" selection-end-column="9" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -112,7 +114,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="configurable.group.appearance" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -203,26 +205,26 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="65" y="-4" width="1855" height="1023" extended-state="6" />
+    <frame x="57" y="-4" width="1863" height="1023" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" weight="0.1577511" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.15743756" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32960895" />
       <window_info anchor="bottom" id="Cvs" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="3" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="4" weight="0.32960895" />
       <window_info anchor="bottom" id="Version Control" order="5" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Terminal" order="6" visible="true" weight="0.21787709" />
+      <window_info anchor="bottom" id="Terminal" order="6" weight="0.1670354" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
-      <window_info anchor="bottom" id="Python Console" order="8" weight="0.3273743" />
+      <window_info anchor="bottom" id="Python Console" order="8" weight="0.32632744" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Debug" order="3" weight="0.43338862" />
-      <window_info active="true" anchor="right" id="Run" order="4" visible="true" weight="0.37866226" />
+      <window_info anchor="right" id="Debug" order="3" weight="0.4332784" />
+      <window_info active="true" anchor="right" id="Run" order="4" visible="true" weight="0.37836355" />
     </layout>
     <layout-to-restore>
       <window_info id="Favorites" order="0" side_tool="true" />
@@ -247,151 +249,120 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/environment.py</url>
-          <line>51</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
-  </component>
   <component name="debuggerHistoryManager">
     <expressions id="evaluateCodeFragment">
       <expression>
-        <expression-string>g_trim = [g[v] for v in range(0, n_episodes, 10)]
-d_trim = [d[v] for v in range(0, n_episodes, 10)]
-l_trim = [l[v] for v in range(0, n_episodes, 10)]</expression-string>
+        <expression-string>plt.errorbar(x, g_mean, yerr=std)
+plt.show()</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>g = np.mean(stat_g_returns, axis=0)
-d = np.mean(stat_d_returns, axis=0)
-l = np.mean(stat_l_returns, axis=0)</expression-string>
+        <expression-string>plt.show()</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>e</expression-string>
+        <expression-string>plt.errorbar(x, g_mean, yerr=std)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>ee = [e[n] for n in range(0,n_episodes,5)]</expression-string>
+        <expression-string>std = np.std(g, axis=0) / np.sqrt(stat_runs)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>e = np.std(stat_d_returns, axis=0)</expression-string>
+        <expression-string>g_mean = np.mean(g, axis=0)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>x = [n for n in range(0, n_episodes, 5)]</expression-string>
+        <expression-string>for n in range(stat_runs):
+    g.append(stat_g_returns[n][0::20])</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>x = [n for n in range(0, n_episodes, 5)]
-e = np.std(stat_d_returns, axis=0)
-ee = [e[n] for n in range(0, n_episodes, 5)]
-plt.errorbar(x, stat_g_returns, ee, linestyle=&quot;None&quot;, fmt='o')</expression-string>
+        <expression-string>g = []</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>x = [n for n in range(0, n_episodes, 5)]
-e = np.std(stat_d_returns, axis=0)
-ee = [e[n] for n in range(0, n_episodes, 5)]
-plt.errorbar(x, stat_g_returns, e, linestyle=&quot;None&quot;, fmt='o')</expression-string>
+        <expression-string>x = [n for n in range(0, n_episodes, 20)]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>g = np.mean(stat_g_returns, axis=0)
-d = np.mean(stat_d_returns, axis=0)
-l = np.mean(stat_l_returns, axis=0)
-
-stat_g_returns = [g[v] for v in range(0, n_episodes, 10)]
-stat_d_returns = [d[v] for v in range(0, n_episodes, 10)]
-stat_l_returns = [l[v] for v in range(0, n_episodes, 10)]</expression-string>
+        <expression-string>x = [n for n in range(0, n_episodes, 20)]
+g = stat_g_returns[0::20]
+g_mean = np.mean(g, axis=0)
+std = np.std(g, axis=0) / np.sqrt(stat_runs)
+plt.errorbar(x, g_mean, yerr=std)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
     </expressions>
     <expressions id="evaluateExpression">
       <expression>
-        <expression-string>stat_g_returns_trim = [stat_g_returns[v] for v in range(0, n_episodes, 10)]</expression-string>
+        <expression-string>stat_runs</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>x = [n for n in range(0,n_episodes,5)]</expression-string>
+        <expression-string>plt.show()</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>print(g_trim)</expression-string>
+        <expression-string>plt.errorbar(x, g_mean, yerr=std)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>x = [n for n in range(0,n_episodes,5)]     e = np.std(stat_d_returns, axis=0)     e = [e[n] for n in range(0,n_episodes,5)]     plt.errorbar(x, stat_g_returns, e, linestyle=&quot;None&quot;, fmt='o')</expression-string>
+        <expression-string>plt.plot(d)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>plt.errorbar(x, d, e, linestyle=&quot;None&quot;, fmt='o')</expression-string>
+        <expression-string>d=stat_d_returns[0][0::10]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>d</expression-string>
+        <expression-string>g=stat_d_returns[0][0::10]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>plt.errorbar(x,d,e, linestyle=&quot;None&quot;, fmt='o')</expression-string>
+        <expression-string>plt.plot(g)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>stat_g_returns_skip = [g[v] for v in range(0, n_episodes, 10)]</expression-string>
+        <expression-string>g=stat_g_returns[0][0::20]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>stat_g_returns_skip = [stat_g_returns[v] for v in range(0, n_episodes, 10)]</expression-string>
+        <expression-string>stat_g_returns[0][0::20]</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>stat_g_returns[0::20]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="18" selection-start-line="18" selection-end-line="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/environment.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1734">
-          <caret line="102" column="42" lean-forward="true" selection-start-line="102" selection-start-column="42" selection-end-line="102" selection-end-column="42" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/environment.py" />
+    <entry file="file://$PROJECT_DIR$/main.py" />
     <entry file="file://$PROJECT_DIR$/environment_mod1.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="388">
-          <caret line="205" column="32" selection-start-line="205" selection-start-column="32" selection-end-line="205" selection-end-column="32" />
+        <state relative-caret-position="-703">
+          <caret line="222" column="9" selection-start-line="222" selection-start-column="9" selection-end-line="222" selection-end-column="9" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
